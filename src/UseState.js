@@ -3,48 +3,61 @@ import React from 'react'
 const SECURITY_CODE = 'paradigma';
 
 export function UseState({ name }) {
-    const [value, setValue] = React.useState("")
-    const [error, setError] = React.useState(false)
-    const [loading, setLoading] = React.useState(false)
+
+    const [state, setState] = React.useState({
+        value: "",
+        error: false,
+        loading: false
+    })
+
+    // const [value, setValue] = React.useState("")
+    // const [error, setError] = React.useState(false)
+    // const [loading, setLoading] = React.useState(false)
 
 
-
+    console.log(state)
     React.useEffect(()=>{
         console.log("Comenzando el efecto")
-        if(loading){
+        if(state.loading){
             setTimeout(()=>{
-                if(value===SECURITY_CODE){
-                    setLoading(false)
+                if(state.value===SECURITY_CODE){
+                    setState({
+                        ...state,
+                        loading:false,
+                    })
                 }else{
-                    setLoading(false)
-                    setError(true)
+                    setState({...state,loading:false, error:true})
                 }
                 console.log("Terminando la validacion")
             }, 3000)
         }
         console.log("Terminando el efecto")
-    },[loading])
+    },[state.loading])
 
     return (
         <div>
         <h2>Eliminar {name}</h2>
         <p>Por favor, escriba el código de seguridad</p>
-        {(error && !loading) && (
+        {(state.error && !state.loading) && (
             <p>Ta todo mal</p>
         )}
-        {loading && (
+        {state.loading && (
             <p>Cargando...</p>
         )}
         <input 
         type='text' 
         placeholder='código de seguridad'
-        value={value}
+        value={state.value}
         onChange={(event)=>{
-            setValue(event.target.value)
+            setState({...state,
+                value:event.target.value})
         }}
         />
         <button onClick={
-            ()=> setLoading(true)
+            ()=> setState({
+                ...state,
+                loading: true
+            })
         }>Comprobar</button>
         </div>
       )
