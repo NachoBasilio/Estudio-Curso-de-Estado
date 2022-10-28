@@ -19,14 +19,14 @@ export function UseState({ name }) {
 
     console.log(state)
     React.useEffect(()=>{
-        console.log("Comenzando el efecto")
         if(state.loading){
             setTimeout(()=>{
                 if(state.value===SECURITY_CODE){
                     setState({
                         ...state,
                         loading:false,
-                        error:false
+                        error:false,
+                        confirmed: true
                     })
                 }else{
                     setState({...state,loading:false, error:true})
@@ -37,7 +37,8 @@ export function UseState({ name }) {
         console.log("Terminando el efecto")
     },[state.loading])
 
-    return (
+    if(!state.deleted && !state.confirmed){
+        return (
         <div>
         <h2>Eliminar {name}</h2>
         <p>Por favor, escriba el código de seguridad</p>
@@ -63,5 +64,39 @@ export function UseState({ name }) {
             })
         }>Comprobar</button>
         </div>
-      )
+    )}else if(state.confirmed && !state.deleted){
+        return(
+            <React.Fragment>
+                <h2>Eliminar {name}</h2>
+                <p>Pedimos confirmacion. ¿Estas seguro?</p>
+                <button onClick={()=>{
+                    setState({
+                        ...state,
+                        deleted: true
+                    })
+                }}>Si, eliminar</button>
+                <button onClick={()=>{
+                    setState({
+                        ...state,
+                        confirmed: false,
+                        value: ""
+                    })
+                }}>Nop, porfa no</button>
+            </React.Fragment>
+        )
+    }else{
+        return(
+            <React.Fragment>
+            <h2>Eliminar {name}</h2>
+            <button onClick={()=>{
+                    setState({
+                        ...state,
+                        confirmed: false,
+                        deleted: false,
+                        value: ""
+                    })
+                }}>Come back</button>
+            </React.Fragment>
+        )
+    }
 }
