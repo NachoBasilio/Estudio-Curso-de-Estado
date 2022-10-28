@@ -7,7 +7,9 @@ export function UseState({ name }) {
     const [state, setState] = React.useState({
         value: "",
         error: false,
-        loading: false
+        loading: false,
+        deleted: false,
+        confirmed: false,
     })
 
     // const [value, setValue] = React.useState("")
@@ -24,6 +26,7 @@ export function UseState({ name }) {
                     setState({
                         ...state,
                         loading:false,
+                        error:false
                     })
                 }else{
                     setState({...state,loading:false, error:true})
